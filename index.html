@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1Panel 快速部署脚本自定义工</title>
+<script>
+function copyToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('命令已复制到剪贴板，快去部署吧～');
+}
+
+function generateWgetCommand() {
+    const link = 'https://ipxr.cn/c'; // 脚本下载链接硬编码在这里
+    let command = `wget -qO- ${link} | sudo bash`;
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let noneSelected = true;
+
+    // 检查是否有选中的复选框
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked && checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
+            noneSelected = false;
+        }
+    });
+
+    // 如果没有选中任何复选框，添加 -none 参数
+    if (noneSelected) {
+        command += ' -none';
+    } else {
+        // 添加未选中的复选框作为参数
+        checkboxes.forEach(checkbox => {
+            if (!checkbox.checked && checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
+                command += ` -${checkbox.id}`;
+            }
+        });
+    }
+    copyToClipboard(command);
+}
+
+function toggleAll(checked) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        if (checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
+            checkbox.checked = checked;
+        }
+    });
+}
+</script>
+</head>
+<body>
+<h1>1Panel 快速部署脚本自定义工具</h1>
+<form>
+    <input type="hidden" id="scriptLink" value="https://ipxr.cn/c"> <!-- 隐藏输入，用于存储脚本链接 -->
+    <button type="button" id="selectAll" onclick="toggleAll(true)">全选（推荐）</button>
+    <button type="button" id="deselectAll" onclick="toggleAll(false)">全不选（仅安装面板）</button>
+    <br><br>
+    <input type="checkbox" id="supervisor" checked> Supervisor<br>
+    <input type="checkbox" id="clamav" checked> ClamAV<br>
+    <input type="checkbox" id="pureftpd" checked> Pure-FTPd<br>
+    <input type="checkbox" id="fail2ban" checked> Fail2ban<br>
+    <button type="button" onclick="generateWgetCommand()">生成部署命令</button>
+</form>
+</body>
+</html>
