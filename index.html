@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1Panel 快速部署脚本自定义工</title>
+<title>1Panel 快速部署脚本自定义工具</title>
 <script>
 function copyToClipboard(text) {
     const el = document.createElement('textarea');
     el.value = text;
     document.body.appendChild(el);
     el.select();
-    document.execCommand('copy');
+    try {
+        document.execCommand('copy');
+        alert('命令已复制到剪贴板，快去部署吧～');
+    } catch (err) {
+        // 如果复制失败，不显示任何弹窗
+    }
     document.body.removeChild(el);
-    alert('命令已复制到剪贴板，快去部署吧～');
 }
 
 function generateWgetCommand() {
