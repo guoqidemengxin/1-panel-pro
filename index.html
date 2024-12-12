@@ -20,7 +20,7 @@ function copyToClipboard(text) {
 }
 
 function generateWgetCommand() {
-    const link = 'https://ipxr.cn/c'; // 脚本下载链接硬编码在这里
+    const link = 'http://example.com'; // 脚本下载链接硬编码在这里
     let command = `wget -qO- ${link} | sudo bash`;
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     let noneSelected = true;
