@@ -40,11 +40,11 @@ sudo chmod +x 1Panel.sh
 ```
 ./1Panel.sh + 参数 
 ```
-| 类型 | 参数|
+| 安装选项 | 参数 |
 |---------------|-------------|
 | 不安装supervisor | -supervisor |
 | 不安装clamav     | -clamav     |
 | 不安装pureftpd   | -pureftpd   |
 | 不安装fail2ban   | -fail2ban   |
-| 不安装所有       | -none       |
-| 安装所有| -all |
+| 不安装所有联动软件包       | -none       |
+| 安装所有联动软件包| -all |
