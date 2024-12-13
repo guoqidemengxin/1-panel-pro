@@ -23,7 +23,7 @@
  
 **PS：证书过期，流量超标等请发起Issues** 
 #### 手动安装
-1.下载脚本（Gitte,镇江，日本）
+1.下载脚本（开源托管平台,镇江，日本）
 
 ```
 wget -qO 1Panel.sh 下载链接
@@ -46,5 +46,5 @@ sudo chmod +x 1Panel.sh
 | 不安装clamav     | -clamav     |
 | 不安装pureftpd   | -pureftpd   |
 | 不安装fail2ban   | -fail2ban   |
-| 不安装所有联动软件包       | -none       |
+| 不安装所有联动软件包 | -none       |
 | 安装所有联动软件包| -all |
