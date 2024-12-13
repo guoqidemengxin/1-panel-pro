@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1Panel快速部署脚本自定义工具</title>
+<script>
+function copyToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('命令已复制到剪贴板，快去部署吧～');
+}
+
+function generateWgetCommand() {
+    const link = 'https://example/1Panel.sh'; // 脚本下载链接硬编码在这里
+    let command = `wget -qO 1Panel.sh ${link} && sudo chmod +x 1Panel.sh`;
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let noneChecked = true;
+    let allChecked = true;
+
+    // 检查是否所有复选框都被选中或未选中
+    checkboxes.forEach(checkbox => {
+        if (checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
+            if (checkbox.checked) noneChecked = false;
+            else allChecked = false;
+        }
+    });
+
+    // 根据选中状态构建命令参数
+    if (noneChecked) {
+        command += ' && sudo ./1Panel.sh -none';
+    } else if (allChecked) {
+        command += ' && sudo ./1Panel.sh -all';
+    } else {
+        let params = [];
+        checkboxes.forEach(checkbox => {
+            if (checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll' && !checkbox.checked) {
+                params.push(`-${checkbox.id}`);
+            }
+        });
+        command += ` && sudo ./1Panel.sh ${params.join(' ')}`;
+    }
+
+    copyToClipboard(command);
+}
+
+function toggleAll(checked) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        if (checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
+            checkbox.checked = checked;
+        }
+    });
+}
+</script>
+</head>
+<body>
+<h1>1Panel快速部署脚本自定义工具</h1>
+<form>
+    <button type="button" id="selectAll" onclick="toggleAll(true)">全选（推荐）</button>
+    <button type="button" id="deselectAll" onclick="toggleAll(false)">全不选（仅面板）</button>
+    <br>
+    <input type="checkbox" id="supervisor" checked> Supervisor<br>
+    <input type="checkbox" id="clamav" checked> ClamAV<br>
+    <input type="checkbox" id="pureftpd" checked> Pure-FTPd<br>
+    <input type="checkbox" id="fail2ban" checked> Fail2ban<br>
+    <button type="button" onclick="generateWgetCommand()">生成部署命令</button>
+</form>
+</body>
+</html>
