@@ -1,48 +1,49 @@
 <!DOCTYPE html>
-<html lang="cn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1Panel 快速部署脚本自定义工具</title>
+<title>1Panel快速部署脚本自定义工具</title>
 <script>
 function copyToClipboard(text) {
     const el = document.createElement('textarea');
     el.value = text;
     document.body.appendChild(el);
     el.select();
-    try {
-        document.execCommand('copy');
-        alert('命令已复制到剪贴板，快去部署吧～');
-    } catch (err) {
-        // 如果复制失败，不显示任何弹窗
-    }
+    document.execCommand('copy');
     document.body.removeChild(el);
+    alert('命令已复制到剪贴板，快去部署吧～');
 }
 
 function generateWgetCommand() {
-    const link = 'http://example.com'; // 脚本下载链接硬编码在这里
-    let command = `wget -qO- ${link} | sudo bash`;
+    const link = 'https://example/1Panel.sh'; // 脚本下载链接硬编码在这里
+    let command = `wget -qO 1Panel.sh ${link} && sudo chmod +x 1Panel.sh`;
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    let noneSelected = true;
+    let noneChecked = true;
+    let allChecked = true;
 
-    // 检查是否有选中的复选框
+    // 检查是否所有复选框都被选中或未选中
     checkboxes.forEach(checkbox => {
-        if (checkbox.checked && checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
-            noneSelected = false;
+        if (checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
+            if (checkbox.checked) noneChecked = false;
+            else allChecked = false;
         }
     });
 
-    // 如果没有选中任何复选框，添加 -none 参数
-    if (noneSelected) {
-        command += ' -none';
+    // 根据选中状态构建命令参数
+    if (noneChecked) {
+        command += ' && sudo ./1Panel.sh -none';
+    } else if (allChecked) {
+        command += ' && sudo ./1Panel.sh -all';
     } else {
-        // 添加未选中的复选框作为参数
+        let params = [];
         checkboxes.forEach(checkbox => {
-            if (!checkbox.checked && checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll') {
-                command += ` -${checkbox.id}`;
+            if (checkbox.id !== 'selectAll' && checkbox.id !== 'deselectAll' && !checkbox.checked) {
+                params.push(`-${checkbox.id}`);
             }
         });
+        command += ` && sudo ./1Panel.sh ${params.join(' ')}`;
     }
+
     copyToClipboard(command);
 }
 
@@ -57,12 +58,11 @@ function toggleAll(checked) {
 </script>
 </head>
 <body>
-<h1>1Panel 快速部署脚本自定义工具</h1>
+<h1>1Panel快速部署脚本自定义工具</h1>
 <form>
-    <input type="hidden" id="scriptLink" value="https://ipxr.cn/c"> <!-- 隐藏输入，用于存储脚本链接 -->
     <button type="button" id="selectAll" onclick="toggleAll(true)">全选（推荐）</button>
-    <button type="button" id="deselectAll" onclick="toggleAll(false)">全不选（仅安装面板）</button>
-    <br><br>
+    <button type="button" id="deselectAll" onclick="toggleAll(false)">全不选（仅面板）</button>
+    <br>
     <input type="checkbox" id="supervisor" checked> Supervisor<br>
     <input type="checkbox" id="clamav" checked> ClamAV<br>
     <input type="checkbox" id="pureftpd" checked> Pure-FTPd<br>
