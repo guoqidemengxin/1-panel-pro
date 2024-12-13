@@ -5,7 +5,7 @@
 #### 使用场景
 1Panel支持与部分软件联动，但需要自己安装，本项目帮您快速部署 :heart_eyes: 
 #### 软件架构
-支持x86_64、aarch64、armv7l、ppc64le、s390x 支持主流 Linux 发行版本（基于 Debian / RedHat，包括国产操作系统） [（与官方一致）](https://1panel.cn/docs/installation/online_installation/)
+支持x86_64、aarch64、armv7l、ppc64le、s390x 支持主流 Linux 发行版本（基于 Debian包括国产操作系统） [（与官方一致）](https://1panel.cn/docs/installation/online_installation/)
 
 
 #### 主站
